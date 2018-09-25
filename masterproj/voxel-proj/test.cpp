@@ -57,7 +57,7 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
-	// glfwWindowHint(	, GLFW_FALSE);
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 	
 	window = glfwCreateWindow(mode->width, mode->height, "My Title", NULL, NULL);
 
