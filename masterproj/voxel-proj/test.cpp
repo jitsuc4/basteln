@@ -1,8 +1,13 @@
+#include <chrono>
+#include <thread>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "linmath.h"
 #include <stdlib.h>
 #include <stdio.h>
+
+static const int TARGET_FRAMERATE = 60;
+
 static const struct
 {
 	float x, y;
@@ -57,7 +62,7 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 	
 	window = glfwCreateWindow(mode->width, mode->height, "My Title", NULL, NULL);
 
@@ -95,6 +100,8 @@ int main(void)
 		sizeof(float) * 5, (void*)(sizeof(float) * 2));
 	while (!glfwWindowShouldClose(window))
 	{
+		auto start = std::chrono::steady_clock::now();
+
 		float ratio;
 		int width, height;
 		mat4x4 m, p, mvp;
@@ -111,6 +118,19 @@ int main(void)
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		auto renderEnd = std::chrono::steady_clock::now();
+		auto renderTime =
+			std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
+
+
+		std::this_thread::sleep_for(std::chrono::milliseconds((1000/TARGET_FRAMERATE) - renderTime.count()));
+
+		auto end = std::chrono::steady_clock::now();
+		auto loopTime =
+			std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+		fprintf(stderr, "\rFT: %2d FPS: %4d", renderTime.count(), 1000 / loopTime.count());
 	}
 	glfwDestroyWindow(window);
 	glfwTerminate();
