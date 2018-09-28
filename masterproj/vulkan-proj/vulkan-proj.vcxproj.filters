@@ -13,10 +13,36 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\renderer">
+      <UniqueIdentifier>{bd28ec36-f718-4a5f-90af-97b91d7573a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\vulkan">
+      <UniqueIdentifier>{0e6a14f6-a0e2-4641-854d-a35a15b09a62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer">
+      <UniqueIdentifier>{2cd896d9-39e6-4ae8-8a01-641576ec8bcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\vulkan">
+      <UniqueIdentifier>{d68a73cc-21ca-45e2-857d-3d7130900c43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\VideoInfo.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\vulkan\vInitializer.cpp">
+      <Filter>Source Files\renderer\vulkan</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="renderer\VideoInfo.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\vulkan\vInitializer.h">
+      <Filter>Header Files\renderer\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
