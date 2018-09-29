@@ -62,9 +62,11 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
-	glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+	//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
 	
-	window = glfwCreateWindow(mode->width, mode->height, "My Title", NULL, NULL);
+	window = glfwCreateWindow(mode->width, mode->height+1, "My Title", NULL, NULL);
 
 	if (!window)
 	{
@@ -72,9 +74,9 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	glfwSetKeyCallback(window, key_callback);
+
 	glfwMakeContextCurrent(window);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	glfwSwapInterval(1);
 	// NOTE: OpenGL error checks have been omitted for brevity
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
