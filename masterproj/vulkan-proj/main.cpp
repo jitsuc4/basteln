@@ -3,6 +3,7 @@
 #include "renderer/vulkan/vInitializer.h"
 
 #include "renderer/VideoInfo.h"
+#include "model/ModelLoader.h"
 
 class startingApp
 {
@@ -20,6 +21,9 @@ private:
 
 	VideoInfo videoinfo;
 	VulkanInitializer vInit{ videoinfo };
+	
+	std::shared_ptr<ModelLoader> modelLoader;
+
 
 	void initWindow()
 	{
@@ -28,12 +32,18 @@ private:
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 		window = glfwCreateWindow(videoinfo.WIDTH, videoinfo.HEIGHT, "Vulkan", nullptr, nullptr);
+
 		glfwSetWindowUserPointer(window, this);
 		glfwSetFramebufferSizeCallback(window, framebufferResizeCallback);
+		glfwSetKeyCallback(window, key_callback);
 	}
 	void initVulkan()
 	{
-		vInit.init(window);
+		// TODO temporary to have some data
+		modelLoader = std::make_shared<ModelLoader>();
+
+		vInit.setWindow(window);
+		vInit.setInput(modelLoader);
 		vInit.createInstance();
 		vInit.setupDebugCallback();
 		vInit.createSurface();
@@ -45,6 +55,8 @@ private:
 		vInit.createGraphicsPipeline();
 		vInit.createFramebuffers();
 		vInit.createCommandPool();
+		vInit.createVertexBuffer();
+		vInit.createIndexBuffer();
 		vInit.createCommandBuffers();
 		vInit.createSyncObjects();
 	}
@@ -62,7 +74,6 @@ private:
 
 	void cleanup()
 	{
-
 		vInit.cleanUp();
 
 		glfwDestroyWindow(window);
@@ -74,6 +85,12 @@ private:
 	{
 		auto app = reinterpret_cast<startingApp*>(glfwGetWindowUserPointer(window));
 		app->vInit.framebufferResized = true;
+	}
+
+	static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+			glfwSetWindowShouldClose(window, GLFW_TRUE);
 	}
 };
 

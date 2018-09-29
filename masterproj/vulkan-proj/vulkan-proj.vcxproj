@@ -145,10 +145,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model\ModelLoader.cpp" />
     <ClCompile Include="renderer\VideoInfo.cpp" />
     <ClCompile Include="renderer\vulkan\vInitializer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="model\ModelLoader.h" />
     <ClInclude Include="renderer\VideoInfo.h" />
     <ClInclude Include="renderer\vulkan\vInitializer.h" />
   </ItemGroup>

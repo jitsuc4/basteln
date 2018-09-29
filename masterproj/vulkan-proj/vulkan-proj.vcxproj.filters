@@ -25,6 +25,12 @@
     <Filter Include="Header Files\renderer\vulkan">
       <UniqueIdentifier>{d68a73cc-21ca-45e2-857d-3d7130900c43}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{14a19b80-8bf6-43e2-a701-91e124a19c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\model">
+      <UniqueIdentifier>{722f4a40-5d3f-47a3-9e7a-c0c50360a23a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,6 +42,9 @@
     <ClCompile Include="renderer\vulkan\vInitializer.cpp">
       <Filter>Source Files\renderer\vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="model\ModelLoader.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\VideoInfo.h">
@@ -43,6 +52,9 @@
     </ClInclude>
     <ClInclude Include="renderer\vulkan\vInitializer.h">
       <Filter>Header Files\renderer\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="model\ModelLoader.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

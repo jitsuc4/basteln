@@ -14,6 +14,7 @@
 #include <fstream>
 
 #include "../VideoInfo.h"
+#include "../../model/ModelLoader.h"
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -46,7 +47,8 @@ public:
 	VulkanInitializer(VideoInfo vi);
 	~VulkanInitializer();
 
-	void init(GLFWwindow* w);
+	void setWindow(GLFWwindow* w);
+	void setInput(std::shared_ptr<ModelLoader> ml);
 
 	/* Instance */
 	void createInstance();
@@ -91,6 +93,10 @@ public:
 	void recreateSwapChain();
 	bool framebufferResized = false;
 
+	/* Vertex buffer creation */
+	void createVertexBuffer();
+	void createIndexBuffer();
+	
 	/* Clean up */
 	void cleanUp();
 
@@ -99,6 +105,7 @@ private:
 	/* Custom */
 	VideoInfo videoinfo;
 	GLFWwindow* window;
+	std::shared_ptr<ModelLoader> modelLoader;
 
 	/* Instance */
 	VkInstance instance;
@@ -172,4 +179,15 @@ private:
 
 	/* Swap chain recreation */
 	void cleanupSwapChain();
+
+	/* Vertex buffer creation */
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+	/* Staging buffer */
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 };
