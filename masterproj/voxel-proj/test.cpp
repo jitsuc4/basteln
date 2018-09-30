@@ -1,3 +1,4 @@
+#include <thread>
 #include <chrono>
 #include <thread>
 #include <glad/glad.h>
@@ -43,11 +44,56 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
+
+GLFWwindow* window;
+GLuint vertex_buffer, vertex_shader, fragment_shader, program;
+GLint mvp_location, vpos_location, vcol_location;
+
+static volatile int running = GLFW_TRUE;
+
+void renderLoop() {
+	glfwMakeContextCurrent(window);
+
+	while (running)
+	{
+		auto start = std::chrono::steady_clock::now();
+
+		float ratio;
+		int width, height;
+		mat4x4 m, p, mvp;
+		glfwGetFramebufferSize(window, &width, &height);
+		ratio = width / (float)height;
+		glViewport(0, 0, width, height);
+		glClear(GL_COLOR_BUFFER_BIT);
+		mat4x4_identity(m);
+		mat4x4_rotate_Z(m, m, (float)glfwGetTime());
+		mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
+		mat4x4_mul(mvp, p, m);
+		glUseProgram(program);
+		glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+
+		auto renderEnd = std::chrono::steady_clock::now();
+		auto renderTime =
+			std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
+
+
+		std::this_thread::sleep_for(std::chrono::milliseconds((1000 / TARGET_FRAMERATE) - renderTime.count()));
+
+		auto end = std::chrono::steady_clock::now();
+		auto loopTime =
+			std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+		fprintf(stderr, "\rFT: %2d FPS: %4d", renderTime.count(), 1000 / loopTime.count());
+	}
+
+	glfwMakeContextCurrent(NULL);
+}
+
 int main(void)
 {
-	GLFWwindow* window;
-	GLuint vertex_buffer, vertex_shader, fragment_shader, program;
-	GLint mvp_location, vpos_location, vcol_location;
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
@@ -62,11 +108,17 @@ int main(void)
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
-	glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-	//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
-	//glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
-	
-	window = glfwCreateWindow(mode->width, mode->height+1, "My Title", NULL, NULL);
+	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+
+	if (0) {
+		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+		window = glfwCreateWindow(mode->width, mode->height + 1, "My Title", NULL, NULL);
+	}
+	else {
+		glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+		window = glfwCreateWindow(500, 500, "My Title", NULL, NULL);
+
+	}
 
 	if (!window)
 	{
@@ -74,6 +126,9 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 	glfwSetKeyCallback(window, key_callback);
+
+	glfwShowWindow(window);
+
 
 	glfwMakeContextCurrent(window);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -100,40 +155,24 @@ int main(void)
 	glEnableVertexAttribArray(vcol_location);
 	glVertexAttribPointer(vcol_location, 3, GL_FLOAT, GL_FALSE,
 		sizeof(float) * 5, (void*)(sizeof(float) * 2));
-	while (!glfwWindowShouldClose(window))
+
+	glfwMakeContextCurrent(NULL);
+
+
+
+
+	std::thread renderer(renderLoop);
+
+	while (running)
 	{
-		auto start = std::chrono::steady_clock::now();
+		glfwWaitEvents();
 
-		float ratio;
-		int width, height;
-		mat4x4 m, p, mvp;
-		glfwGetFramebufferSize(window, &width, &height);
-		ratio = width / (float)height;
-		glViewport(0, 0, width, height);
-		glClear(GL_COLOR_BUFFER_BIT);
-		mat4x4_identity(m);
-		mat4x4_rotate_Z(m, m, (float)glfwGetTime());
-		mat4x4_ortho(p, -ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-		mat4x4_mul(mvp, p, m);
-		glUseProgram(program);
-		glUniformMatrix4fv(mvp_location, 1, GL_FALSE, (const GLfloat*)mvp);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-
-		auto renderEnd = std::chrono::steady_clock::now();
-		auto renderTime =
-			std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
-
-
-		std::this_thread::sleep_for(std::chrono::milliseconds((1000/TARGET_FRAMERATE) - renderTime.count()));
-
-		auto end = std::chrono::steady_clock::now();
-		auto loopTime =
-			std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-		fprintf(stderr, "\rFT: %2d FPS: %4d", renderTime.count(), 1000 / loopTime.count());
+		if (glfwWindowShouldClose(window))
+			running = GLFW_FALSE;
 	}
+
+	renderer.join();
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
