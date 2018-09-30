@@ -3,6 +3,10 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+#define GLM_FORCE_RADIANS
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
@@ -12,9 +16,11 @@
 #include <optional>
 #include <set>
 #include <fstream>
+#include <chrono>
 
 #include "../VideoInfo.h"
 #include "../../model/ModelLoader.h"
+#include"../../camera/Camera.h"
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -96,7 +102,17 @@ public:
 	/* Vertex buffer creation */
 	void createVertexBuffer();
 	void createIndexBuffer();
-	
+
+	/* Uniform buffers */
+	/* Descriptor layout and buffer */
+	void createDescriptorSetLayout();
+	void createUniformBuffer();
+	void updateUniformBuffer(uint32_t currentImage);
+
+	/* Descriptor pool and sets */
+	void createDescriptorPool();
+	void createDescriptorSets();
+
 	/* Clean up */
 	void cleanUp();
 
@@ -190,4 +206,15 @@ private:
 	/* Staging buffer */
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+
+	/* Uniform buffers */
+	/* Descriptor layout and buffer */
+	VkDescriptorSetLayout descriptorSetLayout;
+
+	std::vector<VkBuffer> uniformBuffers;
+	std::vector<VkDeviceMemory> uniformBuffersMemory;
+
+	/* Descriptor pool and sets */
+	VkDescriptorPool descriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;
 };

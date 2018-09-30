@@ -52,11 +52,15 @@ private:
 		vInit.createSwapchain();
 		vInit.createImageViews();
 		vInit.createRenderPass();
+		vInit.createDescriptorSetLayout();
 		vInit.createGraphicsPipeline();
 		vInit.createFramebuffers();
 		vInit.createCommandPool();
 		vInit.createVertexBuffer();
 		vInit.createIndexBuffer();
+		vInit.createUniformBuffer();
+		vInit.createDescriptorPool();
+		vInit.createDescriptorSets();
 		vInit.createCommandBuffers();
 		vInit.createSyncObjects();
 	}

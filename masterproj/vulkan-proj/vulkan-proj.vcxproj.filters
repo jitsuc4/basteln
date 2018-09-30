@@ -31,6 +31,12 @@
     <Filter Include="Header Files\model">
       <UniqueIdentifier>{722f4a40-5d3f-47a3-9e7a-c0c50360a23a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\camera">
+      <UniqueIdentifier>{56c8662f-f16e-43fb-851a-b522fe262ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\camera">
+      <UniqueIdentifier>{1f4869a3-6c14-4694-b78a-12c59a34c148}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -45,6 +51,9 @@
     <ClCompile Include="model\ModelLoader.cpp">
       <Filter>Source Files\model</Filter>
     </ClCompile>
+    <ClCompile Include="camera\Camera.cpp">
+      <Filter>Source Files\camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\VideoInfo.h">
@@ -55,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="model\ModelLoader.h">
       <Filter>Header Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="camera\Camera.h">
+      <Filter>Header Files\camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
