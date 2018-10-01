@@ -7,6 +7,12 @@
 #include "renderer/VideoInfo.h"
 #include "model/ModelLoader.h"
 
+#include <stdlib.h>
+#include <chrono>
+#include <thread>
+
+static const int TARGET_FRAMERATE = 1000;
+
 class startingApp
 {
 public:
@@ -88,7 +94,23 @@ private:
 		{
 			glfwPollEvents();
 
+
+			auto start = std::chrono::steady_clock::now();
+
 			vInit->drawFrame();
+
+			auto renderEnd = std::chrono::steady_clock::now();
+			auto renderTime = std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
+			
+			auto sleepfortime = std::chrono::milliseconds((1000 / TARGET_FRAMERATE) - renderTime.count());
+			if (sleepfortime.count() > 0) {
+				std::this_thread::sleep_for(sleepfortime);
+			}
+
+			auto end = std::chrono::steady_clock::now();
+			auto loopTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+			fprintf(stderr, "\rFT: %2d FPS: %4d", renderTime.count(), 1000 / loopTime.count());
 		}
 
 	}

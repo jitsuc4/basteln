@@ -1,4 +1,3 @@
-#include <thread>
 #include <chrono>
 #include <thread>
 #include <glad/glad.h>
@@ -7,7 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static const int TARGET_FRAMERATE = 60;
+static const int TARGET_FRAMERATE = 1000;
 
 static const struct
 {
@@ -76,15 +75,16 @@ void renderLoop() {
 		glfwPollEvents();
 
 		auto renderEnd = std::chrono::steady_clock::now();
-		auto renderTime =
-			std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
+		auto renderTime = std::chrono::duration_cast<std::chrono::milliseconds>(renderEnd - start);
 
 
-		std::this_thread::sleep_for(std::chrono::milliseconds((1000 / TARGET_FRAMERATE) - renderTime.count()));
+		auto sleepfortime = std::chrono::milliseconds((1000 / TARGET_FRAMERATE) - renderTime.count());
+		if (sleepfortime.count() > 0) {
+			std::this_thread::sleep_for(sleepfortime);
+		}
 
 		auto end = std::chrono::steady_clock::now();
-		auto loopTime =
-			std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+		auto loopTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
 		fprintf(stderr, "\rFT: %2d FPS: %4d", renderTime.count(), 1000 / loopTime.count());
 	}
@@ -109,10 +109,11 @@ int main(void)
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 	glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
 	glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+	//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
 
-	if (0) {
+	if (1) {
 		glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
-		window = glfwCreateWindow(mode->width, mode->height + 1, "My Title", NULL, NULL);
+		window = glfwCreateWindow(mode->width-1, mode->height, "My Title", NULL, NULL);
 	}
 	else {
 		glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
