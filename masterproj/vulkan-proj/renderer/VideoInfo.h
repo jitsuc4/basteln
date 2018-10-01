@@ -1,7 +1,14 @@
 #pragma once
 
-struct VideoInfo
+#include <GLFW/glfw3.h>
+
+class VideoInfo
 {
-	const int WIDTH = 800;
-	const int HEIGHT = 600;
+
+public:
+	VideoInfo();
+	~VideoInfo();
+
+	GLFWmonitor* monitor;
+	const GLFWvidmode* mode;
 };

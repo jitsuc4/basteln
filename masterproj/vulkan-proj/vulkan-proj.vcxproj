@@ -79,7 +79,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;$(voxellib)\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link />
@@ -96,7 +96,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;$(voxellib)\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link />
@@ -115,7 +115,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;$(voxellib)\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -135,7 +135,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(VULKAN_SDK)\Include;$(voxellib)\glfw-3.2.1.bin.WIN64\include;$(voxellib)\glm;$(voxellib)\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -151,12 +151,14 @@
     <ClCompile Include="camera\Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model\ModelLoader.cpp" />
+    <ClCompile Include="model\TextureLoader.cpp" />
     <ClCompile Include="renderer\VideoInfo.cpp" />
     <ClCompile Include="renderer\vulkan\vInitializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera\Camera.h" />
     <ClInclude Include="model\ModelLoader.h" />
+    <ClInclude Include="model\TextureLoader.h" />
     <ClInclude Include="renderer\VideoInfo.h" />
     <ClInclude Include="renderer\vulkan\vInitializer.h" />
   </ItemGroup>

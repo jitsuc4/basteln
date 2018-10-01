@@ -54,6 +54,9 @@
     <ClCompile Include="camera\Camera.cpp">
       <Filter>Source Files\camera</Filter>
     </ClCompile>
+    <ClCompile Include="model\TextureLoader.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer\VideoInfo.h">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="camera\Camera.h">
       <Filter>Header Files\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="model\TextureLoader.h">
+      <Filter>Header Files\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

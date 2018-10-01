@@ -1,9 +1,11 @@
 #pragma once
 
+
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
 #define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -20,7 +22,8 @@
 
 #include "../VideoInfo.h"
 #include "../../model/ModelLoader.h"
-#include"../../camera/Camera.h"
+#include "../../camera/Camera.h"
+#include "../../model/TextureLoader.h"
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -50,7 +53,7 @@ class VulkanInitializer
 {
 public:
 
-	VulkanInitializer(VideoInfo vi);
+	VulkanInitializer();
 	~VulkanInitializer();
 
 	void setWindow(GLFWwindow* w);
@@ -113,13 +116,22 @@ public:
 	void createDescriptorPool();
 	void createDescriptorSets();
 
+	/* Images */
+	void createTextureImage();
+
+	/* Image view and sampler */
+	void createTextureImageView();
+	void createTextureSampler();
+
+	/* Depth buffering */
+	void createDepthResources();
+
 	/* Clean up */
 	void cleanUp();
 
 private:
 
 	/* Custom */
-	VideoInfo videoinfo;
 	GLFWwindow* window;
 	std::shared_ptr<ModelLoader> modelLoader;
 
@@ -217,4 +229,30 @@ private:
 	/* Descriptor pool and sets */
 	VkDescriptorPool descriptorPool;
 	std::vector<VkDescriptorSet> descriptorSets;
+
+	/* Images */
+	VkImage textureImage;
+	VkDeviceMemory textureImageMemory;
+
+	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	
+	VkCommandBuffer beginSingleTimeCommands();
+	void endSingleTimeCommands(VkCommandBuffer commandBuffer);
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+
+	/* Image view and sampler */
+	VkImageView textureImageView;
+	VkSampler textureSampler;
+
+	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
+
+	/* Depth buffering */
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
+	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	VkFormat findDepthFormat();
+	bool hasStencilComponent(VkFormat format);
 };
