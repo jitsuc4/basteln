@@ -127,6 +127,9 @@ public:
 	/* Depth buffering */
 	void createDepthResources();
 
+	/* Multisampling */
+	void createColorResources();
+
 	/* Clean up */
 	void cleanUp();
 
@@ -236,7 +239,7 @@ private:
 	VkImage textureImage;
 	VkDeviceMemory textureImageMemory;
 
-	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	void createImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
 	void generateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 	
 	VkCommandBuffer beginSingleTimeCommands();
@@ -258,4 +261,13 @@ private:
 	VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	VkFormat findDepthFormat();
 	bool hasStencilComponent(VkFormat format);
+
+	/* Multisampling */
+	VkImage colorImage;
+	VkDeviceMemory colorImageMemory;
+	VkImageView colorImageView;
+
+	VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
+
+	VkSampleCountFlagBits getMaxUsableSampleCount();
 };

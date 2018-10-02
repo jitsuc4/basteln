@@ -75,6 +75,7 @@ private:
 		vInit->createDescriptorSetLayout();
 		vInit->createGraphicsPipeline();
 		vInit->createCommandPool();
+		vInit->createColorResources();
 		vInit->createDepthResources();
 		vInit->createFramebuffers();
 		vInit->createTextureImage();
