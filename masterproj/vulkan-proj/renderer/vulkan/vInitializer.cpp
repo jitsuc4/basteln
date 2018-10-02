@@ -565,11 +565,11 @@ void VulkanInitializer::createCommandBuffers()
 		VkDeviceSize offsets[] = { 0 };
 		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 
-		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(modelLoader->indices.size()), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(modelLoader->models[0].indices.size()), 1, 0, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 
@@ -699,9 +699,10 @@ void VulkanInitializer::recreateSwapChain()
 	createCommandBuffers();
 }
 
+// TODO: support multiple models
 void VulkanInitializer::createVertexBuffer()
 {
-	VkDeviceSize bufferSize = sizeof(modelLoader->vertices[0]) * modelLoader->vertices.size();
+	VkDeviceSize bufferSize = sizeof(modelLoader->models[0].vertices[0]) * modelLoader->models[0].vertices.size();
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -709,7 +710,7 @@ void VulkanInitializer::createVertexBuffer()
 
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, modelLoader->vertices.data(), (size_t)bufferSize);
+	memcpy(data, modelLoader->models[0].vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(device, stagingBufferMemory);
 
 	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vertexBuffer, vertexBufferMemory);
@@ -720,9 +721,10 @@ void VulkanInitializer::createVertexBuffer()
 	vkFreeMemory(device, stagingBufferMemory, nullptr);
 }
 
+// TODO: support multiple models
 void VulkanInitializer::createIndexBuffer()
 {
-	VkDeviceSize bufferSize = sizeof(modelLoader->indices[0]) * modelLoader->indices.size();
+	VkDeviceSize bufferSize = sizeof(modelLoader->models[0].indices[0]) * modelLoader->models[0].indices.size();
 
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
@@ -730,7 +732,7 @@ void VulkanInitializer::createIndexBuffer()
 
 	void* data;
 	vkMapMemory(device, stagingBufferMemory, 0, bufferSize, 0, &data);
-	memcpy(data, modelLoader->indices.data(), (size_t)bufferSize);
+	memcpy(data, modelLoader->models[0].indices.data(), (size_t)bufferSize);
 	vkUnmapMemory(device, stagingBufferMemory);
 
 	createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, indexBuffer, indexBufferMemory);
@@ -894,10 +896,12 @@ void VulkanInitializer::createDescriptorSets()
 	}
 }
 
+// TODO: support multiple models
+// TODO: path parameter
 void VulkanInitializer::createTextureImage()
 {
 	int texWidth, texHeight, texChannels;
-	stbi_uc* pixels = stbi_load("resources/images/eye1.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+	stbi_uc* pixels = stbi_load("resources/textures/chalet.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 
 	if (!pixels)

@@ -1,9 +1,16 @@
 #pragma once
 
 #include <vulkan/vulkan.h>
+
 #include <glm/glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 #include <array>
 #include <vector>
+#include <unordered_map>
+
+#include <tiny_obj_loader.h>
 
 struct Vertex
 {
@@ -44,6 +51,35 @@ struct Vertex
 
 		return attributeDescriptions;
 	}
+
+	bool operator==(const Vertex& other) const
+	{
+		return pos == other.pos && color == other.color && texCoord == other.texCoord;
+	}
+};
+
+namespace std
+{
+	template<> struct hash<Vertex>
+	{
+		size_t operator()(Vertex const& vertex) const
+		{
+			return ((hash<glm::vec3>()(vertex.pos) ^
+				(hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^
+				(hash<glm::vec2>()(vertex.texCoord) << 1);
+		}
+	};
+}
+
+class Model
+{
+public:
+
+	Model();
+	~Model();
+
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
 };
 
 class ModelLoader
@@ -52,7 +88,7 @@ public:
 	ModelLoader();
 	~ModelLoader();
 
-	const std::vector<Vertex> vertices;
-	const std::vector<uint16_t> indices;
-};
+	void loadModel(std::string path);
 
+	std::vector<Model> models;
+};

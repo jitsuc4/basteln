@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include <chrono>
+
 class VideoInfo
 {
 
@@ -11,4 +13,6 @@ public:
 
 	GLFWmonitor* monitor;
 	const GLFWvidmode* mode;
+
+	long long timeperframe;
 };

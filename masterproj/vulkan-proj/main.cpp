@@ -1,4 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
+#define TINYOBJLOADER_IMPLEMENTATION
+
+#include <cmath>
 
 // Uncomment to exclude validation layers
 //#define NDEBUG
@@ -40,6 +43,9 @@ private:
 		glfwWindowHint(GLFW_REFRESH_RATE, videoinfo->mode->refreshRate);
 		//glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
 
+		// limit time per frame in microseconds w.r.t. refreshrate
+		videoinfo->timeperframe = llround(1000000 / static_cast<double>(videoinfo->mode->refreshRate));
+
 		window = glfwCreateWindow(videoinfo->mode->width, videoinfo->mode->height+1, "IsoVoxel", nullptr, nullptr);
 
 		glfwSetWindowUserPointer(window, this);
@@ -57,6 +63,7 @@ private:
 
 		vInit->setWindow(window);
 		vInit->setInput(modelLoader);
+		modelLoader->loadModel("resources/models/chalet.obj");
 		vInit->createInstance();
 		vInit->setupDebugCallback();
 		vInit->createSurface();
@@ -86,11 +93,23 @@ private:
 	{
 		while (!glfwWindowShouldClose(window))
 		{
+			auto frameStart = std::chrono::steady_clock::now();
+
 			glfwPollEvents();
 
 			vInit->drawFrame();
-		}
 
+			auto frameEnd = std::chrono::steady_clock::now();
+			auto frameLength = std::chrono::duration_cast<std::chrono::microseconds>(frameEnd - frameStart).count();
+			
+			if (frameLength < videoinfo->timeperframe)
+			{
+				std::this_thread::sleep_for(std::chrono::microseconds(videoinfo->timeperframe - frameLength));
+			}
+
+			auto loopEnd = std::chrono::steady_clock::now();
+			auto loopTime = std::chrono::duration_cast<std::chrono::microseconds>(loopEnd - frameStart).count();
+		}
 	}
 
 	void cleanup()
