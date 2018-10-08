@@ -63,7 +63,7 @@ private:
 
 		vInit->setWindow(window);
 		vInit->setInput(modelLoader);
-		modelLoader->loadModel("resources/models/chalet.obj");
+		modelLoader->loadModel("resources/models/cottage.obj");
 		vInit->createInstance();
 		vInit->setupDebugCallback();
 		vInit->createSurface();

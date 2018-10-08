@@ -24,7 +24,7 @@ struct Vertex
 		VkVertexInputBindingDescription bindingDescription = {};
 		bindingDescription.binding = 0;
 		bindingDescription.stride = sizeof(Vertex);
-		// VK_VERTEX_INPUT_RATE_INSTANCE: Move to the next data entry after each instance -> instanced rendering
+		// TODO: VK_VERTEX_INPUT_RATE_INSTANCE: Move to the next data entry after each instance -> instanced rendering
 		bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 		return bindingDescription;
